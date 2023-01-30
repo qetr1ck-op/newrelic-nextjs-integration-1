@@ -1,6 +1,6 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import Layout from "../components/Layout";
+import Layout from '../components/Layout';
 import * as http from 'http';
 
 function Blog({ posts }) {
@@ -25,18 +25,16 @@ function Blog({ posts }) {
 }
 
 export async function getServerSideProps({ req }) {
-  const host = req.headers.host
-  // Call an external API endpoint to get posts
-  // this is calling /api/blog handler function
-  // using http because NR agent cannot propagate through global fetch just yet
-  const posts: Array<{ id, title }> = await new Promise((resolve, reject) => {
-    http.get(`http://${host}/api/blog`, (res) => {
-      let body = ''
-      res.on('data', (data) => (body += data.toString(('utf8'))))
-      res.on('end', () => {
-        resolve(JSON.parse(body))
+  const posts: Array<{ id; title }> = await new Promise((resolve, reject) => {
+    http
+      .get('/api/blog', (res) => {
+        let body = '';
+        res.on('data', (data) => (body += data.toString('utf8')));
+        res.on('end', () => {
+          resolve(JSON.parse(body));
+        });
       })
-    }).on('error', reject)
+      .on('error', reject);
   });
 
   return {

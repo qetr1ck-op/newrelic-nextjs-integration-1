@@ -1,7 +1,8 @@
-import Link from "next/link";
-import { logger } from "../../components/Logger";
-import Layout from "../../components/Layout";
-import * as http from "http";
+import Link from 'next/link';
+import { logger } from '../../components/Logger';
+import Layout from '../../components/Layout';
+import * as http from 'http';
+import { getHost } from '../../lib/lib';
 
 function Post({ post }) {
   return (
@@ -25,17 +26,17 @@ export async function getServerSideProps({ params, req }) {
   // using http because NR agent cannot propagate through global fetch just yet
   const posts: Array<{ id; title }> = await new Promise((resolve, reject) => {
     http
-      .get(`http://${host}/api/blog`, (res) => {
-        let body = "";
-        res.on("data", (data) => (body += data.toString("utf8")));
-        res.on("end", () => {
+      .get(`${getHost(req)}/api/blog`, (res) => {
+        let body = '';
+        res.on('data', (data) => (body += data.toString('utf8')));
+        res.on('end', () => {
           resolve(JSON.parse(body));
         });
       })
-      .on("error", reject);
+      .on('error', reject);
   });
 
-  logger.info("Getting post id", { postId: id });
+  logger.info('Getting post id', { postId: id });
   const [post] = posts.filter((p) => p.id === parseInt(id, 10));
 
   return {

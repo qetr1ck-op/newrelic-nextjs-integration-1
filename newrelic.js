@@ -12,7 +12,7 @@ exports.config = {
   /**
    * Array of application names.
    */
-  app_name: ["newrelic-nextjs-integration"],
+  app_name: ["nextjs-integration-new"],
   /**
    * Your New Relic license key.
    */

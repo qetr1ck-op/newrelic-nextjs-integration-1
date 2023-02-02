@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import Layout from '../components/Layout';
 import * as http from 'http';
+import { getHost } from '../lib/lib';
 
 function Blog({ posts }) {
   return (
@@ -27,7 +28,7 @@ function Blog({ posts }) {
 export async function getServerSideProps({ req }) {
   const posts: Array<{ id; title }> = await new Promise((resolve, reject) => {
     http
-      .get('/api/blog', (res) => {
+      .get(`${getHost(req)}/api/blog`, (res) => {
         let body = '';
         res.on('data', (data) => (body += data.toString('utf8')));
         res.on('end', () => {

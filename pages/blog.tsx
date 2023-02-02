@@ -26,17 +26,7 @@ function Blog({ posts }) {
 }
 
 export async function getServerSideProps({ req }) {
-  const posts: Array<{ id; title }> = await new Promise((resolve, reject) => {
-    http
-      .get(`${getHost(req)}/api/blog`, (res) => {
-        let body = '';
-        res.on('data', (data) => (body += data.toString('utf8')));
-        res.on('end', () => {
-          resolve(JSON.parse(body));
-        });
-      })
-      .on('error', reject);
-  });
+  const posts: Array<{ id; title }> = await (await fetch(`${getHost(req)}/api/blog`)).json();
 
   return {
     props: {

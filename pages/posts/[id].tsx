@@ -24,17 +24,7 @@ export async function getServerSideProps({ params, req }) {
   // Call an external API endpoint to get posts
   // this is calling /api/blog handler function
   // using http because NR agent cannot propagate through global fetch just yet
-  const posts: Array<{ id; title }> = await new Promise((resolve, reject) => {
-    http
-      .get(`${getHost(req)}/api/blog`, (res) => {
-        let body = '';
-        res.on('data', (data) => (body += data.toString('utf8')));
-        res.on('end', () => {
-          resolve(JSON.parse(body));
-        });
-      })
-      .on('error', reject);
-  });
+  const posts: Array<{ id; title }> = await (await fetch(`${getHost(req)}/api/blog`)).json();
 
   logger.info('Getting post id', { postId: id });
   const [post] = posts.filter((p) => p.id === parseInt(id, 10));
